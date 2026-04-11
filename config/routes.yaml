@@ -6,3 +6,13 @@ login:
     path: /login
     controller: App\Controller\UserController::login
     methods: [POST]
+
+register:
+    path: /register
+    controller: App\Controller\UserController::register
+    methods: [POST]
+
+delete:
+    path: /delete/{id}
+    controller: App\Controller\UserController::delete
+    methods: [DELETE]

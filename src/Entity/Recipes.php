@@ -93,6 +93,7 @@ class Recipes
      */
     public function __construct()
     {
+        $this->createdAt = new \DateTime();
         $this->ingredient = new \Doctrine\Common\Collections\ArrayCollection();
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
     }

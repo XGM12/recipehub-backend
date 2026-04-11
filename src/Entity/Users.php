@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * Users
@@ -27,7 +28,7 @@ class Users
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=false)
-     * @Groups({"login:read", "login:write"})
+     * @Groups({"login:read", "login:write", "register:write"})
      */
     private $email;
 
@@ -35,7 +36,7 @@ class Users
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255, nullable=false)
-     * @Groups("login:write")
+     * @Groups({"login:write", "register:write"})
      */
     private $password;
 
@@ -43,7 +44,7 @@ class Users
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
-     * @Groups({"login:read"})
+     * @Groups({"login:read", "register:write"})
      */
     private $name;
 
@@ -51,9 +52,9 @@ class Users
      * @var DateTime|null
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
-     * @Groups({"login:read"})
+     * @Groups({"login:read", "register:write"})
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $createdAt;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -75,6 +76,7 @@ class Users
      */
     public function __construct()
     {
+        $this->createdAt = new \DateTime();
         $this->recipe = new \Doctrine\Common\Collections\ArrayCollection();
     }
 

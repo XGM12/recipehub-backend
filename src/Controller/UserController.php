@@ -51,4 +51,70 @@ class UserController extends AbstractController
             ['Content-Type' => 'application/json']
         );
     }
+
+    public function register(Request $request, SerializerInterface $serializer): Response
+    {
+        if ($request->getMethod() != 'POST')
+            return new Response(
+                "HTTP Method is not valid",
+                Response::HTTP_BAD_REQUEST
+            );
+
+        $data = $request->getContent();
+
+        $user = new Users();
+
+        $serializer->deserialize($data, Users::class, 'json', [
+            AbstractNormalizer::OBJECT_TO_POPULATE => $user,
+            AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => ['id'],
+            'groups' => 'register:write'
+        ]);
+
+        $entityManager = $this->getDoctrine()
+            ->getManager();
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $data = $serializer->serialize(
+            $user,
+            'json',
+            ['groups' => 'login:read']
+        );
+
+        return new Response(
+            $data,
+            Response::HTTP_CREATED,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    public function delete(Request $request): Response
+    {
+        if ($request->getMethod() != "DELETE")
+            return new Response(
+                "HTTP Method is not valid",
+                Response::HTTP_BAD_REQUEST
+            );
+
+        $id = $request->get("id");
+
+        $user = $this->getDoctrine()
+            ->getRepository(Users::class)
+            ->findOneBy(['id' => $id]);
+
+        if (!$user)
+            return new Response(
+                "User not found",
+                Response::HTTP_NOT_FOUND
+            );
+
+        $entityManager = $this->getDoctrine()
+            ->getManager();
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return new Response("User deleted", Response::HTTP_NO_CONTENT);
+    }
 }
