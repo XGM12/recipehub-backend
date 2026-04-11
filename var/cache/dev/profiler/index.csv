@@ -1,0 +1,3 @@
+f73f04,172.19.0.1,GET,http://localhost:8082/,1775929844,,200
+865cd4,172.19.0.1,GET,http://localhost:8082/favicon.ico,1775929844,e8a296,404
+e8a296,172.19.0.1,GET,http://localhost:8082/favicon.ico,1775929844,,404
