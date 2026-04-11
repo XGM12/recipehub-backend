@@ -1,3 +1,7 @@
 f73f04,172.19.0.1,GET,http://localhost:8082/,1775929844,,200
 865cd4,172.19.0.1,GET,http://localhost:8082/favicon.ico,1775929844,e8a296,404
 e8a296,172.19.0.1,GET,http://localhost:8082/favicon.ico,1775929844,,404
+d58195,172.19.0.1,GET,http://localhost:8082/,1775933935,,200
+d539e4,172.19.0.1,POST,http://localhost:8082/login,1775933964,,404
+1bdbd4,172.19.0.1,POST,http://localhost:8082/login,1775934008,,200
+21584f,172.19.0.1,POST,http://localhost:8082/login,1775934106,,200

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Users
@@ -18,6 +19,7 @@ class Users
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups({"login:read"})
      */
     private $id;
 
@@ -25,6 +27,7 @@ class Users
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     * @Groups({"login:read", "login:write"})
      */
     private $email;
 
@@ -32,6 +35,7 @@ class Users
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255, nullable=false)
+     * @Groups("login:write")
      */
     private $password;
 
@@ -39,6 +43,7 @@ class Users
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     * @Groups({"login:read"})
      */
     private $name;
 
@@ -46,6 +51,7 @@ class Users
      * @var DateTime|null
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
+     * @Groups({"login:read"})
      */
     private $createdAt = 'CURRENT_TIMESTAMP';
 
