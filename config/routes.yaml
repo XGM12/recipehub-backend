@@ -16,3 +16,4 @@ delete:
     path: /delete/{id}
     controller: App\Controller\UserController::delete
     methods: [DELETE]
+
