@@ -22,6 +22,11 @@ user_recipes:
     controller: App\Controller\RecipesController::userRecipes
     methods: [GET, POST]
 
+delete_recipes:
+    path: /users/{userId}/recipes/{recipeId}
+    controller: App\Controller\RecipesController::deleteUserRecipe
+    methods: [DELETE, PUT]
+
 system_recipes:
     path: /recipes
     controller: App\Controller\RecipesController::getSystemRecipes

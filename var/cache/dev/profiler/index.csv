@@ -56,3 +56,11 @@ f538c9,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776974279,5af3be,50
 5af3be,172.19.0.1,POST,http://localhost:8082/users/1/recipes,1776974279,,500
 894a29,172.19.0.1,POST,http://localhost:8082/users/1/recipes,1776974311,,201
 d6d768,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776974351,,200
+7c726c,172.19.0.1,DELETE,http://localhost:8082/users/1/recipes/36,1776974999,,204
+9c7243,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776975010,,200
+9d2de7,172.19.0.1,POST,http://localhost:8082/users/1/recipes,1776975556,,201
+4c913f,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776975569,,200
+cce5d7,172.19.0.1,PUT,http://localhost:8082/users/1/recipes/37,1776975601,,200
+a5934e,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776975605,,200
+6e414d,172.19.0.1,DELETE,http://localhost:8082/users/1/recipes/37,1776975612,,204
+809b54,172.19.0.1,DELETE,http://localhost:8082/users/1/recipes/37,1776975613,,204

@@ -89,4 +89,51 @@ class RecipesController extends AbstractController
             ['Content-Type' => 'application/json']
         );
     }
+
+    public function deleteUserRecipe(Request $request, SerializerInterface $serializer): Response
+    {
+        Utils::checkRequestMethod($request, "DELETE", "PUT");
+
+        $userId = $request->get("userId");
+        $recipeId = $request->get("recipeId");
+
+        $user = $this->getDoctrine()
+            ->getRepository(Users::class)
+            ->findOneBy(['id' => $userId]);
+
+        $recipe = $this->getDoctrine()
+            ->getRepository(Recipes::class)
+            ->findOneBy(['id' => $recipeId]);
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if ($request->getMethod() == "DELETE") {
+            $user->getRecipe()->removeElement($recipe);
+            $user->setRecipe($user->getRecipe());
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return new Response("Recipe was deleted", Response::HTTP_NO_CONTENT);
+        }
+
+        $body = $request->getContent();
+
+        $serializer->deserialize($body, Recipes::class, 'json', [
+            AbstractNormalizer::OBJECT_TO_POPULATE => $recipe,
+            AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => ['id'],
+            'groups' => 'recipe:write'
+        ]);
+
+        $entityManager->persist($recipe);
+        $entityManager->flush();
+
+        $data = Utils::serializeData($recipe, ['groups' => 'recipe:read'], $serializer);
+
+        return new Response(
+            $data,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
 }
