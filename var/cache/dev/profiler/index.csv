@@ -26,3 +26,9 @@ fe9096,172.19.0.1,DELETE,http://localhost:8082/delete/4,1775935418,,404
 397e20,172.19.0.1,GET,http://localhost:8082/login,1775935724,04c53e,405
 04c53e,172.19.0.1,GET,http://localhost:8082/login,1775935724,,405
 1e84cf,172.19.0.1,GET,http://localhost:8082/,1775935737,,200
+eba3c7,172.19.0.1,POST,http://localhost:8082/login,1776410325,,200
+9a8eba,172.19.0.1,POST,http://localhost:8082/login,1776410537,,200
+16a045,172.19.0.1,POST,http://localhost:8082/login,1776413589,,200
+79688a,172.19.0.1,GET,http://localhost:8082/users/1,1776967677,,200
+03558f,172.19.0.1,GET,http://localhost:8082/users/4,1776967682,,404
+73cb24,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776968214,,200

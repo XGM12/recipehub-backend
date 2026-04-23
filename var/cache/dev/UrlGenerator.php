@@ -19,4 +19,6 @@ return [
     'login' => [[], ['_controller' => 'App\\Controller\\UserController::login'], [], [['text', '/login']], [], []],
     'register' => [[], ['_controller' => 'App\\Controller\\UserController::register'], [], [['text', '/register']], [], []],
     'delete' => [['id'], ['_controller' => 'App\\Controller\\UserController::delete'], [], [['variable', '/', '[^/]++', 'id'], ['text', '/delete']], [], []],
+    'user_id' => [['id'], ['_controller' => 'App\\Controller\\UserController::getUserById'], [], [['variable', '/', '[^/]++', 'id'], ['text', '/users']], [], []],
+    'user_recipes' => [['id'], ['_controller' => 'App\\Controller\\RecipesController::getAllUserLikedRecipes'], [], [['text', '/recipes'], ['variable', '/', '[^/]++', 'id'], ['text', '/users']], [], []],
 ];
