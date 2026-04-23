@@ -37,3 +37,8 @@ d5d4f5,172.19.0.1,POST,http://localhost:8082/login,1776969306,,200
 3c4846,172.19.0.1,GET,http://localhost:8082/recipes,1776969643,46a49f,500
 46a49f,172.19.0.1,GET,http://localhost:8082/recipes,1776969643,,500
 1d76da,172.19.0.1,GET,http://localhost:8082/recipes,1776969684,,200
+e8c864,172.19.0.1,DELETE,http://localhost:8082/users/6,1776972861,,404
+0f1f4c,172.19.0.1,POST,http://localhost:8082/register,1776972878,,201
+40bc50,172.19.0.1,DELETE,http://localhost:8082/users/6,1776972882,,200
+3cd096,172.19.0.1,DELETE,http://localhost:8082/users/6,1776972930,,204
+c0bc24,172.19.0.1,DELETE,http://localhost:8082/users/6,1776972942,,404

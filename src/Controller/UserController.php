@@ -72,37 +72,12 @@ class UserController extends AbstractController
         );
     }
 
-    public function delete(Request $request): Response
+    public function getUserById(Request $request, SerializerInterface $serializer): Response
     {
-        Utils::checkRequestMethod($request, "DELETE");
-
-        $id = $request->get("id");
-
-        $user = $this->getDoctrine()
-            ->getRepository(Users::class)
-            ->findOneBy(['id' => $id]);
-
-        try {
-            Utils::checkNotNull($user, "User not found");
-        } catch (NotFoundHttpException $_) {
-            return new Response(
-                "User not found",
-                Response::HTTP_NOT_FOUND
-            );
-        }
+        Utils::checkRequestMethod($request, "GET", "DELETE");
 
         $entityManager = $this->getDoctrine()
             ->getManager();
-
-        $entityManager->remove($user);
-        $entityManager->flush();
-
-        return new Response("User deleted", Response::HTTP_NO_CONTENT);
-    }
-
-    public function getUserById(Request $request, SerializerInterface $serializer): Response
-    {
-        Utils::checkRequestMethod($request, "GET");
 
         $id = $request->get("id");
 
@@ -117,6 +92,13 @@ class UserController extends AbstractController
                 "User not found",
                 Response::HTTP_NOT_FOUND
             );
+        }
+
+        if ($request->getMethod() == "DELETE") {
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            return new Response("User deleted", Response::HTTP_NO_CONTENT);
         }
 
         $data = Utils::serializeData($user, ['groups' => 'login:read'], $serializer);

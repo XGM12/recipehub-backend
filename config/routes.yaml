@@ -12,15 +12,10 @@ register:
     controller: App\Controller\UserController::register
     methods: [POST]
 
-delete:
-    path: /delete/{id}
-    controller: App\Controller\UserController::delete
-    methods: [DELETE]
-
 user_id:
     path: /users/{id}
     controller: App\Controller\UserController::getUserById
-    methods: [GET]
+    methods: [GET, DELETE]
 
 user_recipes:
     path: /users/{id}/recipes

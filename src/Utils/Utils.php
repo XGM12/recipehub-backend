@@ -9,9 +9,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class Utils
 {
-    public static function checkRequestMethod(Request $request, string $method)
+    public static function checkRequestMethod(Request $request, string ...$methods)
     {
-        if ($request->getMethod() != $method)
+        if (!in_array($request->getMethod(), $methods))
             throw new BadRequestHttpException("HTTP method not valid");
     }
 
