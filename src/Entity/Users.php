@@ -20,7 +20,7 @@ class Users
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Groups({"login:read"})
+     * @Groups({"login:read", "user_recipe:read"})
      */
     private $id;
 
@@ -28,7 +28,7 @@ class Users
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=false)
-     * @Groups({"login:read", "login:write", "register:write"})
+     * @Groups({"login:read", "login:write", "register:write", "user_recipe:read"})
      */
     private $email;
 
@@ -44,7 +44,7 @@ class Users
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
-     * @Groups({"login:read", "register:write"})
+     * @Groups({"login:read", "register:write", "user_recipe:read"})
      */
     private $name;
 
@@ -52,7 +52,7 @@ class Users
      * @var DateTime|null
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
-     * @Groups({"login:read", "register:write"})
+     * @Groups({"login:read", "register:write", "user_recipe:read"})
      */
     private $createdAt;
 

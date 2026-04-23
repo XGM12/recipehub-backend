@@ -30,6 +30,7 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
                     'login:read',
                     'login:write',
                     'register:write',
+                    'user_recipe:read',
                 ],
             ],
         ],

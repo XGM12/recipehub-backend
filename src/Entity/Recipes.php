@@ -70,6 +70,7 @@ class Recipes
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      * })
+     * @Groups({"user_recipe:read"})
      */
     private $createdBy;
 

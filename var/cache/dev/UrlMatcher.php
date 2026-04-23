@@ -16,6 +16,7 @@ return [
         '/' => [[['_route' => 'index', '_controller' => 'App\\Controller\\DefaultController::index'], null, null, null, false, false, null]],
         '/login' => [[['_route' => 'login', '_controller' => 'App\\Controller\\UserController::login'], null, ['POST' => 0], null, false, false, null]],
         '/register' => [[['_route' => 'register', '_controller' => 'App\\Controller\\UserController::register'], null, ['POST' => 0], null, false, false, null]],
+        '/recipes' => [[['_route' => 'system_recipes', '_controller' => 'App\\Controller\\RecipesController::getSystemRecipes'], null, ['GET' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
@@ -52,7 +53,7 @@ return [
         185 => [[['_route' => 'delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['DELETE' => 0], null, false, true, null]],
         211 => [[['_route' => 'user_id', '_controller' => 'App\\Controller\\UserController::getUserById'], ['id'], ['GET' => 0], null, false, true, null]],
         227 => [
-            [['_route' => 'user_recipes', '_controller' => 'App\\Controller\\RecipesController::getAllUserLikedRecipes'], ['id'], ['GET' => 0], null, false, false, null],
+            [['_route' => 'user_recipes', '_controller' => 'App\\Controller\\RecipesController::getAllUserLikedRecipes'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

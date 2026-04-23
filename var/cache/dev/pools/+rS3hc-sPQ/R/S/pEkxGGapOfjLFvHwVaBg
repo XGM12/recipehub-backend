@@ -30,6 +30,7 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
             'groups' => [
                 3 => [
                     'login:read',
+                    'user_recipe:read',
                 ],
             ],
         ],

@@ -26,7 +26,7 @@ class UserController extends AbstractController
             ->findOneBy(['email' => $data['email'], 'password' => $data['password']]);
 
         try {
-            Users::checkUser($user);
+            Utils::checkNotNull($user);
         } catch (NotFoundHttpException $_) {
             return new Response(
                 "User not found",
@@ -34,12 +34,10 @@ class UserController extends AbstractController
             );
         }
 
+        $data = Utils::serializeData($user, ['groups' => 'login:read'], $serializer);
+
         return new Response(
-            $serializer->serialize(
-                $user,
-                'json',
-                ['groups' => 'login:read']
-            ),
+            $data,
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
@@ -65,11 +63,7 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        $data = $serializer->serialize(
-            $user,
-            'json',
-            ['groups' => 'login:read']
-        );
+        $data = Utils::serializeData($user, ['groups' => 'login:read'], $serializer);
 
         return new Response(
             $data,
@@ -89,7 +83,7 @@ class UserController extends AbstractController
             ->findOneBy(['id' => $id]);
 
         try {
-            Users::checkUser($user);
+            Utils::checkNotNull($user, "User not found");
         } catch (NotFoundHttpException $_) {
             return new Response(
                 "User not found",
@@ -125,11 +119,7 @@ class UserController extends AbstractController
             );
         }
 
-        $data = $serializer->serialize(
-            $user,
-            'json',
-            ['group' => 'login:read']
-        );
+        $data = Utils::serializeData($user, ['groups' => 'login:read'], $serializer);
 
         return new Response(
             $data,

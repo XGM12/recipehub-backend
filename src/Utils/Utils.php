@@ -5,6 +5,7 @@ namespace App\Utils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class Utils
 {
@@ -18,5 +19,14 @@ class Utils
     {
         if (!$entity)
             throw new NotFoundHttpException($message);
+    }
+
+    public static function serializeData($data, array $groups, SerializerInterface $serializer): string
+    {
+        return $serializer->serialize(
+            $data,
+            'json',
+            $groups
+        );
     }
 }
