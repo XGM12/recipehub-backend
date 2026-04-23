@@ -25,7 +25,14 @@ class UserController extends AbstractController
             ->getRepository(Users::class)
             ->findOneBy(['email' => $data['email'], 'password' => $data['password']]);
 
-        $this->checkUser($user);
+        try {
+            Users::checkUser($user);
+        } catch (NotFoundHttpException $_) {
+            return new Response(
+                "User not found",
+                Response::HTTP_NOT_FOUND
+            );
+        }
 
         return new Response(
             $serializer->serialize(
@@ -81,7 +88,14 @@ class UserController extends AbstractController
             ->getRepository(Users::class)
             ->findOneBy(['id' => $id]);
 
-        $this->checkUser($user);
+        try {
+            Users::checkUser($user);
+        } catch (NotFoundHttpException $_) {
+            return new Response(
+                "User not found",
+                Response::HTTP_NOT_FOUND
+            );
+        }
 
         $entityManager = $this->getDoctrine()
             ->getManager();
@@ -102,7 +116,14 @@ class UserController extends AbstractController
             ->getRepository(Users::class)
             ->findOneBy(['id' => $id]);
 
-        $this->checkUser($user);
+        try {
+            Utils::checkNotNull($user);
+        } catch (NotFoundHttpException $_) {
+            return new Response(
+                "User not found",
+                Response::HTTP_NOT_FOUND
+            );
+        }
 
         $data = $serializer->serialize(
             $user,
@@ -115,13 +136,5 @@ class UserController extends AbstractController
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
-    }
-
-
-
-    private function checkUser(?Users $user)
-    {
-        if (!$user)
-            throw new NotFoundHttpException("User not found");
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Recipes
@@ -18,6 +19,7 @@ class Recipes
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups({"recipe:read"})
      */
     private $id;
 
@@ -25,6 +27,7 @@ class Recipes
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @Groups({"recipe:read"})
      */
     private $name;
 
@@ -32,6 +35,7 @@ class Recipes
      * @var string|null
      *
      * @ORM\Column(name="image_url", type="string", length=500, nullable=true)
+     * @Groups({"recipe:read"})
      */
     private $imageUrl;
 
@@ -39,6 +43,7 @@ class Recipes
      * @var int
      *
      * @ORM\Column(name="prep_time_minutes", type="integer", nullable=false)
+     * @Groups({"recipe:read"})
      */
     private $prepTimeMinutes;
 
@@ -46,6 +51,7 @@ class Recipes
      * @var string
      *
      * @ORM\Column(name="category", type="string", length=0, nullable=false)
+     * @Groups({"recipe:read"})
      */
     private $category;
 
@@ -53,6 +59,7 @@ class Recipes
      * @var DateTime|null
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
+     * @Groups({"recipe:read"})
      */
     private $createdAt = 'CURRENT_TIMESTAMP';
 
