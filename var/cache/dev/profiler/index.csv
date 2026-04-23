@@ -42,3 +42,17 @@ e8c864,172.19.0.1,DELETE,http://localhost:8082/users/6,1776972861,,404
 40bc50,172.19.0.1,DELETE,http://localhost:8082/users/6,1776972882,,200
 3cd096,172.19.0.1,DELETE,http://localhost:8082/users/6,1776972930,,204
 c0bc24,172.19.0.1,DELETE,http://localhost:8082/users/6,1776972942,,404
+7b4657,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776973067,,200
+7130c3,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776973095,,200
+426e8c,172.19.0.1,POST,http://localhost:8082/users/1/recipes,1776974074,,201
+5f7214,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776974091,,200
+3c77a8,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776974168,546bcc,500
+546bcc,172.19.0.1,POST,http://localhost:8082/users/1/recipes,1776974168,,500
+d5a059,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776974193,a3ae30,500
+a3ae30,172.19.0.1,POST,http://localhost:8082/users/1/recipes,1776974193,,500
+d3338e,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776974259,7364c3,500
+7364c3,172.19.0.1,POST,http://localhost:8082/users/1/recipes,1776974259,,500
+f538c9,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776974279,5af3be,500
+5af3be,172.19.0.1,POST,http://localhost:8082/users/1/recipes,1776974279,,500
+894a29,172.19.0.1,POST,http://localhost:8082/users/1/recipes,1776974311,,201
+d6d768,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1776974351,,200

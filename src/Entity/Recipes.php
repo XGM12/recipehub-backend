@@ -19,7 +19,7 @@ class Recipes
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe_user:read"})
      */
     private $id;
 
@@ -27,7 +27,7 @@ class Recipes
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe:write", "recipe_user:read"})
      */
     private $name;
 
@@ -35,7 +35,7 @@ class Recipes
      * @var string|null
      *
      * @ORM\Column(name="image_url", type="string", length=500, nullable=true)
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe:write", "recipe_user:read"})
      */
     private $imageUrl;
 
@@ -43,7 +43,7 @@ class Recipes
      * @var int
      *
      * @ORM\Column(name="prep_time_minutes", type="integer", nullable=false)
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe:write", "recipe_user:read"})
      */
     private $prepTimeMinutes;
 
@@ -51,7 +51,7 @@ class Recipes
      * @var string
      *
      * @ORM\Column(name="category", type="string", length=0, nullable=false)
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe:write", "recipe_user:read"})
      */
     private $category;
 
@@ -59,7 +59,7 @@ class Recipes
      * @var DateTime|null
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe_user:read"})
      */
     private $createdAt = 'CURRENT_TIMESTAMP';
 

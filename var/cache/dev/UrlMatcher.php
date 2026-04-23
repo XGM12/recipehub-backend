@@ -51,7 +51,7 @@ return [
         159 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
         187 => [[['_route' => 'user_id', '_controller' => 'App\\Controller\\UserController::getUserById'], ['id'], ['GET' => 0, 'DELETE' => 1], null, false, true, null]],
         203 => [
-            [['_route' => 'user_recipes', '_controller' => 'App\\Controller\\RecipesController::getAllUserLikedRecipes'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null],
+            [['_route' => 'user_recipes', '_controller' => 'App\\Controller\\RecipesController::userRecipes'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

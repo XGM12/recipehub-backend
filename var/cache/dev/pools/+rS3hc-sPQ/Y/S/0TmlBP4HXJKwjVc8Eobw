@@ -31,6 +31,8 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
             'groups' => [
                 1 => [
                     'recipe:read',
+                    'recipe:write',
+                    'recipe_user:read',
                 ],
             ],
         ],

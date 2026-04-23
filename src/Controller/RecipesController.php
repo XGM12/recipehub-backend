@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class RecipesController extends AbstractController
@@ -34,9 +35,9 @@ class RecipesController extends AbstractController
         );
     }
 
-    public function getAllUserLikedRecipes(Request $request, SerializerInterface $serializer): Response
+    public function userRecipes(Request $request, SerializerInterface $serializer): Response
     {
-        Utils::checkRequestMethod($request, "GET");
+        Utils::checkRequestMethod($request, "GET", "POST");
 
         $id = $request->get("id");
 
@@ -53,11 +54,34 @@ class RecipesController extends AbstractController
             );
         }
 
-        $data = $serializer->serialize(
-            $user->getRecipe(),
-            'json',
-            ['groups' => 'recipe:read']
-        );
+        if ($request->getMethod() == "POST") {
+            $body = $request->getContent();
+
+            $recipe = new Recipes();
+
+            $serializer->deserialize($body, Recipes::class, 'json', [
+                AbstractNormalizer::OBJECT_TO_POPULATE => $recipe,
+                AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => ['id'],
+                'groups' => 'recipe:write'
+            ]);
+
+            $recipe->setCreatedBy($user);
+            $user->getRecipe()->add($recipe);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($recipe);
+            $entityManager->flush();
+
+            $data = Utils::serializeData($recipe, ['groups' => ['user_recipe:read', 'recipe:read']], $serializer);
+
+            return new Response(
+                $data,
+                Response::HTTP_CREATED,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $data = Utils::serializeData($user->getRecipe(), ['groups' => 'recipe:read'], $serializer);
 
         return new Response(
             $data,

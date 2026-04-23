@@ -68,7 +68,7 @@ class Users
      *     @ORM\JoinColumn(name="recipe_id", referencedColumnName="id")
      *   }
      * )
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe_user:read"})
      */
     private $recipe = array();
 

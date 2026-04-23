@@ -19,7 +19,7 @@ user_id:
 
 user_recipes:
     path: /users/{id}/recipes
-    controller: App\Controller\RecipesController::getAllUserLikedRecipes
+    controller: App\Controller\RecipesController::userRecipes
     methods: [GET, POST]
 
 system_recipes:
