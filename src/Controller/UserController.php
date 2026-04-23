@@ -119,7 +119,7 @@ class UserController extends AbstractController
 
 
 
-    private function checkUser(Users $user)
+    private function checkUser(?Users $user)
     {
         if (!$user)
             throw new NotFoundHttpException("User not found");

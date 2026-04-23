@@ -17,3 +17,8 @@ delete:
     controller: App\Controller\UserController::delete
     methods: [DELETE]
 
+user_id:
+    path: /users/{id}
+    controller: App\Controller\UserController::getUserById
+    methods: [GET]
+
