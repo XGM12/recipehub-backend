@@ -24,7 +24,7 @@ class RecipesController extends AbstractController
 
         // [SOSTENIBILIDAD] Caché Redis de 5 minutos para evitar queries repetidas a MySQL.
         // Reduce el procesamiento del servidor y el consumo energético asociado.
-        $recipes = $cache->get("system_recipes", function(ItemInterface $item) {
+        $recipes = $cache->get("system_recipes", function (ItemInterface $item) {
             $item->expiresAfter(300);
             return $this->getDoctrine()
                 ->getRepository(Recipes::class)
@@ -33,7 +33,53 @@ class RecipesController extends AbstractController
 
         Utils::checkNotNull($recipes);
 
-        $data = Utils::serializeData($recipes, ['groups' => ['recipe:read', 'user_recipe:read']], $serializer);
+        $data = Utils::serializeData(
+            $recipes,
+            ['groups' => [
+                'recipe:read',
+                'user_recipe:read',
+                'ingredients:read',
+                'recipe_steps:read'
+            ]],
+            $serializer
+        );
+
+        return new Response(
+            $data,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    public function getSystemRecipe(Request $request, SerializerInterface $serializer): Response
+    {
+        Utils::checkRequestMethod($request, "GET");
+
+        $id = $request->get('id');
+
+        $recipe = $this->getDoctrine()
+            ->getRepository(Recipes::class)
+            ->findBy(['createdBy' => null, 'id' => $id]);
+
+        try {
+            Utils::checkNotNull($recipe);
+        } catch (NotFoundHttpException $_) {
+            return new Response(
+                "Recipe not found",
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $data = Utils::serializeData(
+            $recipe,
+            ['groups' => [
+                'user_recipe:read',
+                'recipe:read',
+                'ingredients:read',
+                'steps_recipe:read'
+            ]],
+            $serializer
+        );
 
         return new Response(
             $data,
@@ -83,7 +129,15 @@ class RecipesController extends AbstractController
             // para garantizar consistencia de datos sin consultas innecesarias.
             $cache->delete("system_recipes");
 
-            $data = Utils::serializeData($recipe, ['groups' => ['user_recipe:read', 'recipe:read']], $serializer);
+            $data = Utils::serializeData(
+                $recipe,
+                ['groups' => [
+                    'user_recipe:read',
+                    'recipe:read',
+                    'ingredients:read',
+                    'steps_recipe:read'
+                ]],
+                $serializer);
 
             return new Response(
                 $data,

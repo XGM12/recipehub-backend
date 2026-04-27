@@ -71,3 +71,15 @@ add374,172.19.0.1,GET,http://localhost:8082/login,1777312880,919035,500
 71c597,172.19.0.1,GET,http://localhost:8082/recipes,1777313256,,200
 d8916d,172.19.0.1,GET,http://localhost:8082/recipes,1777313267,,200
 8f3d4e,172.19.0.1,GET,http://localhost:8082/recipes,1777313268,,200
+c5c8ef,172.19.0.1,GET,http://localhost:8082/recipes,1777315645,,200
+43c2df,172.19.0.1,GET,http://localhost:8082/recipes,1777315750,,200
+bd36ad,172.19.0.1,GET,http://localhost:8082/recipes,1777315827,,200
+bb0e47,172.19.0.1,GET,http://localhost:8082/recipes,1777315898,,200
+07d4fd,172.19.0.1,GET,http://localhost:8082/recipes,1777316091,d3ee71,500
+d3ee71,172.19.0.1,GET,http://localhost:8082/recipes,1777316091,,500
+ee5b1e,172.19.0.1,GET,http://localhost:8082/recipes,1777316127,,200
+0061da,172.19.0.1,GET,http://localhost:8082/recipes,1777317127,,200
+456ea0,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1777317225,,200
+1518f5,172.19.0.1,GET,http://localhost:8082/recipes/1,1777320101,,200
+8056df,172.19.0.1,GET,http://localhost:8082/recipes/1,1777320146,,200
+6f6434,172.19.0.1,GET,http://localhost:8082/recipes/1,1777320199,,200

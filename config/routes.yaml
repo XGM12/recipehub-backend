@@ -31,3 +31,8 @@ system_recipes:
     path: /recipes
     controller: App\Controller\RecipesController::getSystemRecipes
     methods: [GET]
+
+system_recipe:
+    path: /recipes/{id}
+    controller: App\Controller\RecipesController:getSystemRecipe
+    methods: [GET]

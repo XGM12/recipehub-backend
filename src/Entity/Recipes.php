@@ -86,6 +86,7 @@ class Recipes
      *     @ORM\JoinColumn(name="ingredient_id", referencedColumnName="id")
      *   }
      * )
+     * @Groups({"ingredients:read"})
      */
     private $ingredient = array();
 
@@ -93,8 +94,17 @@ class Recipes
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Users", mappedBy="recipe")
+     * @Groups({"user_recipe:read"})
      */
     private $user = array();
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="RecipeSteps", mappedBy="recipe")
+     * @Groups({"recipe_steps:read"})
+     */
+    private $steps = array();
 
     /**
      * Constructor
@@ -104,6 +114,7 @@ class Recipes
         $this->createdAt = new \DateTime();
         $this->ingredient = new \Doctrine\Common\Collections\ArrayCollection();
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->steps = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getId(): int
@@ -207,6 +218,22 @@ class Recipes
     public function setUser($user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
+     */
+    public function getSteps()
+    {
+        return $this->steps;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection $steps
+     */
+    public function setSteps($steps): void
+    {
+        $this->steps = $steps;
     }
 
 }

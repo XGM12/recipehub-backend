@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Ingredients
@@ -18,6 +19,7 @@ class Ingredients
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups({"ingredients:read"})
      */
     private $id;
 
@@ -25,6 +27,7 @@ class Ingredients
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     * @Groups({"ingredients:read"})
      */
     private $name;
 

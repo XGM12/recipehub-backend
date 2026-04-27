@@ -22,4 +22,5 @@ return [
     'user_recipes' => [['id'], ['_controller' => 'App\\Controller\\RecipesController::userRecipes'], [], [['text', '/recipes'], ['variable', '/', '[^/]++', 'id'], ['text', '/users']], [], []],
     'delete_recipes' => [['userId', 'recipeId'], ['_controller' => 'App\\Controller\\RecipesController::deleteUserRecipe'], [], [['variable', '/', '[^/]++', 'recipeId'], ['text', '/recipes'], ['variable', '/', '[^/]++', 'userId'], ['text', '/users']], [], []],
     'system_recipes' => [[], ['_controller' => 'App\\Controller\\RecipesController::getSystemRecipes'], [], [['text', '/recipes']], [], []],
+    'system_recipe' => [['id'], ['_controller' => 'App\\Controller\\RecipesController:getSystemRecipe'], [], [['variable', '/', '[^/]++', 'id'], ['text', '/recipes']], [], []],
 ];
