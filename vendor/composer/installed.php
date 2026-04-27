@@ -355,6 +355,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'predis/predis' => array(
+            'pretty_version' => 'v3.4.2',
+            'version' => '3.4.2.0',
+            'reference' => '2033429520d8997a7815a2485f56abe6d2d0e075',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../predis/predis',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'psr/cache' => array(
             'pretty_version' => '2.0.0',
             'version' => '2.0.0.0',
@@ -397,6 +406,15 @@
                 0 => '1.0',
             ),
         ),
+        'psr/http-message' => array(
+            'pretty_version' => '2.0',
+            'version' => '2.0.0.0',
+            'reference' => '402d35bcb92c70c026d1a6a9883f06b2ead23d71',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/http-message',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'psr/link' => array(
             'pretty_version' => '1.1.1',
             'version' => '1.1.1.0',
@@ -424,8 +442,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0',
+                0 => '1.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache-implementation' => array(
@@ -606,9 +624,9 @@
             'dev_requirement' => true,
         ),
         'symfony/cache' => array(
-            'pretty_version' => 'v4.4.46',
-            'version' => '4.4.46.0',
-            'reference' => 'f59de59d747fbb55c9bd148c092de4e52b2054c8',
+            'pretty_version' => 'v4.4.48',
+            'version' => '4.4.48.0',
+            'reference' => '3b98ed664887ad197b8ede3da2432787212eb915',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/cache',
             'aliases' => array(),

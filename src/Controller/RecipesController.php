@@ -13,16 +13,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class RecipesController extends AbstractController
 {
-    public function getSystemRecipes(Request $request, SerializerInterface $serializer): Response
+    public function getSystemRecipes(Request $request, SerializerInterface $serializer, CacheInterface $cache): Response
     {
         Utils::checkRequestMethod($request, "GET");
 
-        $recipes = $this->getDoctrine()
-            ->getRepository(Recipes::class)
-            ->findAll();
+        // [SOSTENIBILIDAD] Caché Redis de 5 minutos para evitar queries repetidas a MySQL.
+        // Reduce el procesamiento del servidor y el consumo energético asociado.
+        $recipes = $cache->get("system_recipes", function(ItemInterface $item) {
+            $item->expiresAfter(300);
+            return $this->getDoctrine()
+                ->getRepository(Recipes::class)
+                ->findBy(['createdBy' => null]);
+        });
 
         Utils::checkNotNull($recipes);
 
@@ -35,7 +42,7 @@ class RecipesController extends AbstractController
         );
     }
 
-    public function userRecipes(Request $request, SerializerInterface $serializer): Response
+    public function userRecipes(Request $request, SerializerInterface $serializer, CacheInterface $cache): Response
     {
         Utils::checkRequestMethod($request, "GET", "POST");
 
@@ -72,6 +79,10 @@ class RecipesController extends AbstractController
             $entityManager->persist($recipe);
             $entityManager->flush();
 
+            // [SOSTENIBILIDAD] Se invalida la caché al crear una receta nueva
+            // para garantizar consistencia de datos sin consultas innecesarias.
+            $cache->delete("system_recipes");
+
             $data = Utils::serializeData($recipe, ['groups' => ['user_recipe:read', 'recipe:read']], $serializer);
 
             return new Response(
@@ -90,7 +101,7 @@ class RecipesController extends AbstractController
         );
     }
 
-    public function deleteUserRecipe(Request $request, SerializerInterface $serializer): Response
+    public function deleteUserRecipe(Request $request, SerializerInterface $serializer, CacheInterface $cache): Response
     {
         Utils::checkRequestMethod($request, "DELETE", "PUT");
 
@@ -114,6 +125,9 @@ class RecipesController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
+            // [SOSTENIBILIDAD] Invalidamos la caché al eliminar una receta.
+            $cache->delete('system_recipes');
+
             return new Response("Recipe was deleted", Response::HTTP_NO_CONTENT);
         }
 
@@ -127,6 +141,10 @@ class RecipesController extends AbstractController
 
         $entityManager->persist($recipe);
         $entityManager->flush();
+
+        // [SOSTENIBILIDAD] Invalidamos la caché al editar una receta
+        // para que los datos cacheados no queden obsoletos.
+        $cache->delete('system_recipes');
 
         $data = Utils::serializeData($recipe, ['groups' => 'recipe:read'], $serializer);
 
