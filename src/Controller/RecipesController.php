@@ -227,21 +227,74 @@ class RecipesController extends AbstractController
         }
 
         $body = $request->getContent();
+        $bodyDecoded = json_decode($body, true);
 
+        // Actualiza los campos básicos de la receta
         $serializer->deserialize($body, Recipes::class, 'json', [
             AbstractNormalizer::OBJECT_TO_POPULATE => $recipe,
             AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => ['id'],
             'groups' => 'recipe:write'
         ]);
 
-        $entityManager->persist($recipe);
+        // Borra los pasos actuales y los recrea
+        foreach ($recipe->getSteps() as $step) {
+            $entityManager->remove($step);
+        }
+        $recipe->getSteps()->clear();
+
+        if (isset($bodyDecoded['steps']) && is_array($bodyDecoded['steps'])) {
+            foreach ($bodyDecoded['steps'] as $stepData) {
+                $step = new RecipeSteps();
+                $step->setStepOrder($stepData['step_order']);
+                $step->setDescription($stepData['description']);
+                $step->setRecipe($recipe);
+                $recipe->getSteps()->add($step);
+                $entityManager->persist($step);
+            }
+        }
+
+        // Borra los ingredientes actuales y los recrea
+        foreach ($recipe->getRecipeIngredients() as $recipeIngredient) {
+            $entityManager->remove($recipeIngredient);
+        }
+        $recipe->getRecipeIngredients()->clear();
+
+        if (isset($bodyDecoded['ingredients']) && is_array($bodyDecoded['ingredients'])) {
+            foreach ($bodyDecoded['ingredients'] as $ingredientData) {
+                $ingredient = $this->getDoctrine()
+                    ->getRepository(Ingredients::class)
+                    ->findOneBy(['name' => $ingredientData['name']]);
+
+                if (!$ingredient) {
+                    $ingredient = new Ingredients();
+                    $ingredient->setName($ingredientData['name']);
+                    $entityManager->persist($ingredient);
+                }
+
+                $recipeIngredient = new RecipeIngredients();
+                $recipeIngredient->setRecipe($recipe);
+                $recipeIngredient->setIngredient($ingredient);
+                $recipeIngredient->setQuantity($ingredientData['quantity'] ?? '');
+                $recipe->getRecipeIngredients()->add($recipeIngredient);
+                $entityManager->persist($recipeIngredient);
+            }
+        }
+
         $entityManager->flush();
 
         // [SOSTENIBILIDAD] Invalidamos la caché al editar una receta
         // para que los datos cacheados no queden obsoletos.
         $cache->delete('system_recipes');
 
-        $data = Utils::serializeData($recipe, ['groups' => 'recipe:read'], $serializer);
+        $data = Utils::serializeData(
+            $recipe,
+            ['groups' => [
+                'recipe:read',
+                'ingredients:read',
+                'recipe_steps:read'
+            ]],
+            $serializer
+        );
 
         return new Response(
             $data,

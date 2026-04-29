@@ -96,3 +96,5 @@ ec6154,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1777487386,,200
 f567ea,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1777487511,,200
 89636d,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1777487528,,200
 dc23df,172.19.0.1,GET,http://localhost:8082/users/1/recipes,1777487563,,200
+1af779,172.19.0.1,PUT,http://localhost:8082/users/1/recipes/40,1777490930,,200
+374dc4,172.19.0.1,DELETE,http://localhost:8082/users/1/recipes/40,1777490947,,204
