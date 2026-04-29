@@ -77,18 +77,10 @@ class Recipes
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Ingredients", inversedBy="recipe")
-     * @ORM\JoinTable(name="recipe_ingredients",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="recipe_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="ingredient_id", referencedColumnName="id")
-     *   }
-     * )
+     * @ORM\OneToMany(targetEntity="RecipeIngredients", mappedBy="recipe", cascade={"persist"})
      * @Groups({"ingredients:read"})
      */
-    private $ingredient = array();
+    private $recipeIngredients = array();
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -112,7 +104,7 @@ class Recipes
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->ingredient = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->recipeIngredients = new \Doctrine\Common\Collections\ArrayCollection();
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
         $this->steps = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -188,20 +180,14 @@ class Recipes
         $this->createdBy = $createdBy;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
-     */
-    public function getIngredient()
+    public function getRecipeIngredients()
     {
-        return $this->ingredient;
+        return $this->recipeIngredients;
     }
 
-    /**
-     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection $ingredient
-     */
-    public function setIngredient($ingredient): void
+    public function setRecipeIngredients($recipeIngredients): void
     {
-        $this->ingredient = $ingredient;
+        $this->recipeIngredients = $recipeIngredients;
     }
 
     /**

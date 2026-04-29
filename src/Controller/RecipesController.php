@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Ingredients;
+use App\Entity\RecipeIngredients;
 use App\Entity\Recipes;
+use App\Entity\RecipeSteps;
 use App\Entity\Users;
 use App\Utils\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,8 +39,8 @@ class RecipesController extends AbstractController
         $data = Utils::serializeData(
             $recipes,
             ['groups' => [
-                'recipe:read',
                 'user_recipe:read',
+                'recipe:read',
                 'ingredients:read',
                 'recipe_steps:read'
             ]],
@@ -76,7 +79,7 @@ class RecipesController extends AbstractController
                 'user_recipe:read',
                 'recipe:read',
                 'ingredients:read',
-                'steps_recipe:read'
+                'recipe_steps:read'
             ]],
             $serializer
         );
@@ -109,7 +112,7 @@ class RecipesController extends AbstractController
 
         if ($request->getMethod() == "POST") {
             $body = $request->getContent();
-
+            $bodyDecoded = json_decode($body, true);
             $recipe = new Recipes();
 
             $serializer->deserialize($body, Recipes::class, 'json', [
@@ -123,6 +126,41 @@ class RecipesController extends AbstractController
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($recipe);
+
+            // Añadir pasos a la receta
+            if (isset($bodyDecoded['steps']) && is_array($bodyDecoded['steps'])) {
+                foreach ($bodyDecoded['steps'] as $stepData) {
+                    $step = new RecipeSteps();
+                    $step->setStepOrder($stepData['step_order']);
+                    $step->setDescription($stepData['description']);
+                    $step->setRecipe($recipe);
+                    $recipe->getSteps()->add($step);
+                    $entityManager->persist($step);
+                }
+            }
+
+            // Ingredientes
+            if (isset($bodyDecoded['ingredients']) && is_array($bodyDecoded['ingredients'])) {
+                foreach ($bodyDecoded['ingredients'] as $ingredientData) {
+                    $ingredient = $this->getDoctrine()
+                        ->getRepository(Ingredients::class)
+                        ->findOneBy(['name' => $ingredientData['name']]);
+
+                    if (!$ingredient) {
+                        $ingredient = new Ingredients();
+                        $ingredient->setName($ingredientData['name']);
+                        $entityManager->persist($ingredient);
+                    }
+
+                    $recipeIngredient = new RecipeIngredients();
+                    $recipeIngredient->setRecipe($recipe);
+                    $recipeIngredient->setIngredient($ingredient);
+                    $recipeIngredient->setQuantity($ingredientData['quantity'] ?? '');
+                    $recipe->getRecipeIngredients()->add($recipeIngredient);
+                    $entityManager->persist($recipeIngredient);
+                }
+            }
+
             $entityManager->flush();
 
             // [SOSTENIBILIDAD] Se invalida la caché al crear una receta nueva
@@ -135,9 +173,10 @@ class RecipesController extends AbstractController
                     'user_recipe:read',
                     'recipe:read',
                     'ingredients:read',
-                    'steps_recipe:read'
+                    'recipe_steps:read'
                 ]],
-                $serializer);
+                $serializer
+            );
 
             return new Response(
                 $data,
@@ -146,7 +185,16 @@ class RecipesController extends AbstractController
             );
         }
 
-        $data = Utils::serializeData($user->getRecipe(), ['groups' => 'recipe:read'], $serializer);
+        $data = Utils::serializeData(
+            $user->getRecipe(),
+            ['groups' => [
+                'user_recipe:read',
+                'recipe:read',
+                'ingredients:read',
+                'recipe_steps:read'
+            ]],
+            $serializer
+        );
 
         return new Response(
             $data,
@@ -162,10 +210,6 @@ class RecipesController extends AbstractController
         $userId = $request->get("userId");
         $recipeId = $request->get("recipeId");
 
-        $user = $this->getDoctrine()
-            ->getRepository(Users::class)
-            ->findOneBy(['id' => $userId]);
-
         $recipe = $this->getDoctrine()
             ->getRepository(Recipes::class)
             ->findOneBy(['id' => $recipeId]);
@@ -173,10 +217,7 @@ class RecipesController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         if ($request->getMethod() == "DELETE") {
-            $user->getRecipe()->removeElement($recipe);
-            $user->setRecipe($user->getRecipe());
-
-            $entityManager->persist($user);
+            $entityManager->remove($recipe);
             $entityManager->flush();
 
             // [SOSTENIBILIDAD] Invalidamos la caché al eliminar una receta.

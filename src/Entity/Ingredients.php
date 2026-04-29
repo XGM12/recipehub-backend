@@ -31,21 +31,6 @@ class Ingredients
      */
     private $name;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Recipes", mappedBy="ingredient")
-     */
-    private $recipe = array();
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->recipe = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
     public function getId(): int
     {
         return $this->id;
@@ -60,22 +45,4 @@ class Ingredients
     {
         $this->name = $name;
     }
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
-     */
-    public function getRecipe()
-    {
-        return $this->recipe;
-    }
-
-    /**
-     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection $recipe
-     */
-    public function setRecipe($recipe): void
-    {
-        $this->recipe = $recipe;
-    }
-
-
 }
