@@ -1014,8 +1014,8 @@
     <service id="translator.selector" class="Symfony\Component\Translation\MessageSelector" public="false">
       <deprecated>The "%service_id%" service is deprecated since Symfony 4.2, use "identity_translator" instead.</deprecated>
     </service>
-    <service id=".cache_connection.GD_MSZC" class="Symfony\Component\Cache\Adapter\AbstractAdapter" public="false">
-      <argument>redis://localhost</argument>
+    <service id=".cache_connection.wzCeXGP" class="Symfony\Component\Cache\Adapter\AbstractAdapter" public="false">
+      <argument>%env(REDIS_URL)%</argument>
       <argument type="collection">
         <argument key="lazy">true</argument>
       </argument>
@@ -5174,22 +5174,33 @@
         <argument>make:migration</argument>
       </call>
     </service>
+    <service id=".service_locator.bqWH_NW" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="cache" type="service_closure" id="cache.app"/>
+        <argument key="serializer" type="service_closure" id="serializer"/>
+      </argument>
+    </service>
     <service id=".service_locator.BuqDmxr" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="serializer" type="service_closure" id="serializer"/>
       </argument>
     </service>
-    <service id=".service_locator.azn4D6u" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.C70UzL9" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="App\Controller\RecipesController::getAllUserLikedRecipes" type="service_closure" id=".service_locator.BuqDmxr"/>
-        <argument key="App\Controller\RecipesController::getSystemRecipes" type="service_closure" id=".service_locator.BuqDmxr"/>
+        <argument key="App\Controller\RecipesController::deleteUserRecipe" type="service_closure" id=".service_locator.bqWH_NW"/>
+        <argument key="App\Controller\RecipesController::getSystemRecipe" type="service_closure" id=".service_locator.BuqDmxr"/>
+        <argument key="App\Controller\RecipesController::getSystemRecipes" type="service_closure" id=".service_locator.bqWH_NW"/>
+        <argument key="App\Controller\RecipesController::userRecipes" type="service_closure" id=".service_locator.bqWH_NW"/>
         <argument key="App\Controller\UserController::getUserById" type="service_closure" id=".service_locator.BuqDmxr"/>
         <argument key="App\Controller\UserController::login" type="service_closure" id=".service_locator.BuqDmxr"/>
         <argument key="App\Controller\UserController::register" type="service_closure" id=".service_locator.BuqDmxr"/>
-        <argument key="App\Controller\RecipesController:getAllUserLikedRecipes" type="service_closure" id=".service_locator.BuqDmxr"/>
-        <argument key="App\Controller\RecipesController:getSystemRecipes" type="service_closure" id=".service_locator.BuqDmxr"/>
+        <argument key="App\Controller\RecipesController:deleteUserRecipe" type="service_closure" id=".service_locator.bqWH_NW"/>
+        <argument key="App\Controller\RecipesController:getSystemRecipe" type="service_closure" id=".service_locator.BuqDmxr"/>
+        <argument key="App\Controller\RecipesController:getSystemRecipes" type="service_closure" id=".service_locator.bqWH_NW"/>
+        <argument key="App\Controller\RecipesController:userRecipes" type="service_closure" id=".service_locator.bqWH_NW"/>
         <argument key="App\Controller\UserController:getUserById" type="service_closure" id=".service_locator.BuqDmxr"/>
         <argument key="App\Controller\UserController:login" type="service_closure" id=".service_locator.BuqDmxr"/>
         <argument key="App\Controller\UserController:register" type="service_closure" id=".service_locator.BuqDmxr"/>
@@ -5642,12 +5653,12 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.azn4D6u"/>
+      <argument type="service" id=".service_locator.C70UzL9"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver" public="false">
-      <argument type="service" id=".service_locator.azn4D6u"/>
+      <argument type="service" id=".service_locator.C70UzL9"/>
     </service>
     <service id=".debug.http_client.inner" class="Symfony\Contracts\HttpClient\HttpClientInterface" public="false">
       <argument type="collection"/>
@@ -5839,10 +5850,10 @@
         <argument key="var_dumper.command.server_dump" type="service_closure" id="var_dumper.command.server_dump"/>
       </argument>
     </service>
-    <service id="cache.app.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter" public="false">
-      <argument>XoeVoiZE68</argument>
+    <service id="cache.app.recorder_inner" class="Symfony\Component\Cache\Adapter\RedisAdapter" public="false">
+      <argument type="service" id=".cache_connection.wzCeXGP"/>
+      <argument>yKJ4Rysar7</argument>
       <argument>0</argument>
-      <argument>/code/var/cache/dev/pools</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -5936,7 +5947,7 @@
     <service id="Symfony\Contracts\Cache\TagAwareCacheInterface" alias="cache.app.taggable" public="false"/>
     <service id="Symfony\Component\Translation\TranslatorInterface" alias="translator.data_collector" public="false"/>
     <service id="Symfony\Contracts\Translation\TranslatorInterface" alias="translator.data_collector" public="false"/>
-    <service id="cache.default_redis_provider" alias=".cache_connection.GD_MSZC" public="false"/>
+    <service id="cache.default_redis_provider" alias=".cache_connection.wzCeXGP" public="false"/>
     <service id="cache.default_memcached_provider" alias=".cache_connection.JKE6keX" public="false"/>
     <service id="cache.default_pdo_provider" alias="doctrine.dbal.default_connection" public="false"/>
     <service id="Symfony\Component\HttpFoundation\Session\SessionInterface" alias="session" public="false"/>
@@ -6039,7 +6050,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger" public="false"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.CmORmuK" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.azn4D6u"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.C70UzL9"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
     <service id="Psr\Log\LoggerInterface $consoleLogger" alias="monolog.logger.console"/>

@@ -10,7 +10,7 @@ if (in_array(PHP_SAPI, ['cli', 'phpdbg'], true)) {
 }
 
 require dirname(__DIR__, 3).'/vendor/autoload.php';
-require __DIR__.'/Container62f7xph/srcApp_KernelDevDebugContainer.php';
+require __DIR__.'/ContainerGGUa55b/srcApp_KernelDevDebugContainer.php';
 
 $classes = [];
 $classes[] = 'Symfony\Bundle\FrameworkBundle\FrameworkBundle';
@@ -50,7 +50,7 @@ $classes[] = 'Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFa
 $classes[] = 'Symfony\Component\Cache\Adapter\TraceableAdapter';
 $classes[] = 'Symfony\Component\Cache\Adapter\AdapterInterface';
 $classes[] = 'Symfony\Component\Cache\Adapter\AbstractAdapter';
-$classes[] = 'Symfony\Component\Cache\Adapter\FilesystemAdapter';
+$classes[] = 'Symfony\Component\Cache\Adapter\RedisAdapter';
 $classes[] = 'Symfony\Component\Cache\Marshaller\DefaultMarshaller';
 $classes[] = 'Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer';
 $classes[] = 'Symfony\Component\Cache\Adapter\ArrayAdapter';

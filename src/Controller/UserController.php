@@ -26,7 +26,7 @@ class UserController extends AbstractController
             ->findOneBy(['email' => $data['email'], 'password' => $data['password']]);
 
         try {
-            Users::checkUser($user);
+            Utils::checkNotNull($user);
         } catch (NotFoundHttpException $_) {
             return new Response(
                 "User not found",
@@ -34,12 +34,10 @@ class UserController extends AbstractController
             );
         }
 
+        $data = Utils::serializeData($user, ['groups' => 'login:read'], $serializer);
+
         return new Response(
-            $serializer->serialize(
-                $user,
-                'json',
-                ['groups' => 'login:read']
-            ),
+            $data,
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
@@ -65,11 +63,7 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        $data = $serializer->serialize(
-            $user,
-            'json',
-            ['groups' => 'login:read']
-        );
+        $data = Utils::serializeData($user, ['groups' => 'login:read'], $serializer);
 
         return new Response(
             $data,
@@ -78,37 +72,12 @@ class UserController extends AbstractController
         );
     }
 
-    public function delete(Request $request): Response
+    public function getUserById(Request $request, SerializerInterface $serializer): Response
     {
-        Utils::checkRequestMethod($request, "DELETE");
-
-        $id = $request->get("id");
-
-        $user = $this->getDoctrine()
-            ->getRepository(Users::class)
-            ->findOneBy(['id' => $id]);
-
-        try {
-            Users::checkUser($user);
-        } catch (NotFoundHttpException $_) {
-            return new Response(
-                "User not found",
-                Response::HTTP_NOT_FOUND
-            );
-        }
+        Utils::checkRequestMethod($request, "GET", "DELETE");
 
         $entityManager = $this->getDoctrine()
             ->getManager();
-
-        $entityManager->remove($user);
-        $entityManager->flush();
-
-        return new Response("User deleted", Response::HTTP_NO_CONTENT);
-    }
-
-    public function getUserById(Request $request, SerializerInterface $serializer): Response
-    {
-        Utils::checkRequestMethod($request, "GET");
 
         $id = $request->get("id");
 
@@ -125,11 +94,14 @@ class UserController extends AbstractController
             );
         }
 
-        $data = $serializer->serialize(
-            $user,
-            'json',
-            ['group' => 'login:read']
-        );
+        if ($request->getMethod() == "DELETE") {
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            return new Response("User deleted", Response::HTTP_NO_CONTENT);
+        }
+
+        $data = Utils::serializeData($user, ['groups' => 'login:read'], $serializer);
 
         return new Response(
             $data,

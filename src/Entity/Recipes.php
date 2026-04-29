@@ -19,7 +19,7 @@ class Recipes
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe_user:read"})
      */
     private $id;
 
@@ -27,7 +27,7 @@ class Recipes
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe:write", "recipe_user:read"})
      */
     private $name;
 
@@ -35,7 +35,7 @@ class Recipes
      * @var string|null
      *
      * @ORM\Column(name="image_url", type="string", length=500, nullable=true)
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe:write", "recipe_user:read"})
      */
     private $imageUrl;
 
@@ -43,7 +43,7 @@ class Recipes
      * @var int
      *
      * @ORM\Column(name="prep_time_minutes", type="integer", nullable=false)
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe:write", "recipe_user:read"})
      */
     private $prepTimeMinutes;
 
@@ -51,7 +51,7 @@ class Recipes
      * @var string
      *
      * @ORM\Column(name="category", type="string", length=0, nullable=false)
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe:write", "recipe_user:read"})
      */
     private $category;
 
@@ -59,7 +59,7 @@ class Recipes
      * @var DateTime|null
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
-     * @Groups({"recipe:read"})
+     * @Groups({"recipe:read", "recipe_user:read"})
      */
     private $createdAt = 'CURRENT_TIMESTAMP';
 
@@ -70,30 +70,33 @@ class Recipes
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      * })
+     * @Groups({"user_recipe:read"})
      */
     private $createdBy;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Ingredients", inversedBy="recipe")
-     * @ORM\JoinTable(name="recipe_ingredients",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="recipe_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="ingredient_id", referencedColumnName="id")
-     *   }
-     * )
+     * @ORM\OneToMany(targetEntity="RecipeIngredients", mappedBy="recipe", cascade={"persist"})
+     * @Groups({"ingredients:read"})
      */
-    private $ingredient = array();
+    private $recipeIngredients = array();
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Users", mappedBy="recipe")
+     * @Groups({"user_recipe:read"})
      */
     private $user = array();
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="RecipeSteps", mappedBy="recipe")
+     * @Groups({"recipe_steps:read"})
+     */
+    private $steps = array();
 
     /**
      * Constructor
@@ -101,8 +104,9 @@ class Recipes
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->ingredient = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->recipeIngredients = new \Doctrine\Common\Collections\ArrayCollection();
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->steps = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getId(): int
@@ -176,20 +180,14 @@ class Recipes
         $this->createdBy = $createdBy;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
-     */
-    public function getIngredient()
+    public function getRecipeIngredients()
     {
-        return $this->ingredient;
+        return $this->recipeIngredients;
     }
 
-    /**
-     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection $ingredient
-     */
-    public function setIngredient($ingredient): void
+    public function setRecipeIngredients($recipeIngredients): void
     {
-        $this->ingredient = $ingredient;
+        $this->recipeIngredients = $recipeIngredients;
     }
 
     /**
@@ -206,6 +204,22 @@ class Recipes
     public function setUser($user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
+     */
+    public function getSteps()
+    {
+        return $this->steps;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection $steps
+     */
+    public function setSteps($steps): void
+    {
+        $this->steps = $steps;
     }
 
 }
