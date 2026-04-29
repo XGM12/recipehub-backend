@@ -23,6 +23,9 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
                     'created_by',
                 ],
             ],
+            'repositoryClass' => [
+                2 => 'App\\Repository\\RecipeRepository',
+            ],
         ],
     ],
     [

@@ -23,6 +23,9 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
                     'email',
                 ],
             ],
+            'repositoryClass' => [
+                2 => 'App\\Repository\\UserRepository',
+            ],
         ],
     ],
     [
