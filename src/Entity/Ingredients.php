@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Ingredients
@@ -18,6 +19,7 @@ class Ingredients
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups({"ingredients:read"})
      */
     private $id;
 
@@ -25,23 +27,9 @@ class Ingredients
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     * @Groups({"ingredients:read"})
      */
     private $name;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Recipes", mappedBy="ingredient")
-     */
-    private $recipe = array();
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->recipe = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     public function getId(): int
     {
@@ -57,22 +45,4 @@ class Ingredients
     {
         $this->name = $name;
     }
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
-     */
-    public function getRecipe()
-    {
-        return $this->recipe;
-    }
-
-    /**
-     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection $recipe
-     */
-    public function setRecipe($recipe): void
-    {
-        $this->recipe = $recipe;
-    }
-
-
 }

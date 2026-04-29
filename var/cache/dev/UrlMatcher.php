@@ -16,6 +16,7 @@ return [
         '/' => [[['_route' => 'index', '_controller' => 'App\\Controller\\DefaultController::index'], null, null, null, false, false, null]],
         '/login' => [[['_route' => 'login', '_controller' => 'App\\Controller\\UserController::login'], null, ['POST' => 0], null, false, false, null]],
         '/register' => [[['_route' => 'register', '_controller' => 'App\\Controller\\UserController::register'], null, ['POST' => 0], null, false, false, null]],
+        '/recipes' => [[['_route' => 'system_recipes', '_controller' => 'App\\Controller\\RecipesController::getSystemRecipes'], null, ['GET' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
@@ -34,11 +35,14 @@ return [
                         .'|(*:159)'
                     .')'
                 .')'
-                .'|/delete/([^/]++)(*:185)'
                 .'|/users/([^/]++)(?'
-                    .'|(*:211)'
-                    .'|/recipes(*:227)'
+                    .'|(*:187)'
+                    .'|/recipes(?'
+                        .'|(*:206)'
+                        .'|/([^/]++)(*:223)'
+                    .')'
                 .')'
+                .'|/recipes/([^/]++)(*:250)'
             .')/?$}sD',
     ],
     [ // $dynamicRoutes
@@ -49,10 +53,11 @@ return [
         136 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
         149 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
         159 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
-        185 => [[['_route' => 'delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['DELETE' => 0], null, false, true, null]],
-        211 => [[['_route' => 'user_id', '_controller' => 'App\\Controller\\UserController::getUserById'], ['id'], ['GET' => 0], null, false, true, null]],
-        227 => [
-            [['_route' => 'user_recipes', '_controller' => 'App\\Controller\\RecipesController::getAllUserLikedRecipes'], ['id'], ['GET' => 0], null, false, false, null],
+        187 => [[['_route' => 'user_id', '_controller' => 'App\\Controller\\UserController::getUserById'], ['id'], ['GET' => 0, 'DELETE' => 1], null, false, true, null]],
+        206 => [[['_route' => 'user_recipes', '_controller' => 'App\\Controller\\RecipesController::userRecipes'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        223 => [[['_route' => 'delete_recipes', '_controller' => 'App\\Controller\\RecipesController::deleteUserRecipe'], ['userId', 'recipeId'], ['DELETE' => 0, 'PUT' => 1], null, false, true, null]],
+        250 => [
+            [['_route' => 'system_recipe', '_controller' => 'App\\Controller\\RecipesController:getSystemRecipe'], ['id'], ['GET' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],
