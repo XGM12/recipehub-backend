@@ -27,4 +27,18 @@ class RecipeRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['createdBy' => null, 'id' => $id]);
     }
+
+    public function searchRecipes(string $name, array $categories = []): array
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->where('r.name LIKE :name')
+            ->setParameter('name', '%' . $name . '%')
+            ->orderBy('r.name', 'ASC');
+
+        if (!empty($categories))
+            $qb->andWhere('r.category IN (:categories)')
+                ->setParameter('categories', $categories);
+
+        return $qb->getQuery()->getResult();
+    }
 }

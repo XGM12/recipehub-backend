@@ -34,5 +34,10 @@ system_recipes:
 
 system_recipe:
     path: /recipes/{id}
-    controller: App\Controller\RecipesController:getSystemRecipe
+    controller: App\Controller\RecipesController::getSystemRecipe
+    methods: [GET]
+
+search:
+    path: /search
+    controller: App\Controller\SearchController::search
     methods: [GET]
