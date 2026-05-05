@@ -53,9 +53,14 @@ class RecipeService
         );
     }
 
-    public function getSystemRecipe(string $id, SerializerInterface $serializer): Response
+    public function getSystemRecipe(string $id, SerializerInterface $serializer, CacheInterface $cache): Response
     {
-        $recipe = $this->recipeRepository->findSystemRecipeById($id);
+        // [SOSTENIBILIDAD] Caché Redis por receta individual para evitar queries repetidas.
+        // Reduce el procesamiento del servidor y el consumo energético asociado.
+        $recipe = $cache->get('system_recipe_' . $id, function (ItemInterface $item) use ($id) {
+            $item->expiresAfter(300);
+            return $this->recipeRepository->findSystemRecipeById($id);
+        });
 
         if (!$recipe)
             return new Response("Recipe not found", Response::HTTP_NOT_FOUND);
@@ -69,8 +74,10 @@ class RecipeService
 
     public function getUserRecipes(Users $user, SerializerInterface $serializer): Response
     {
+        $recipes = $this->recipeRepository->findByUser($user);
+
         return new Response(
-            Utils::serializeData($user->getRecipe(), $this->getRecipeGroups(), $serializer),
+            Utils::serializeData($recipes, $this->getRecipeGroups(), $serializer),
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
@@ -121,6 +128,7 @@ class RecipeService
 
         // [SOSTENIBILIDAD] Invalidamos la caché al eliminar una receta.
         $cache->delete(self::CACHE_KEY);
+        $cache->delete('system_recipe_' . $recipe->getId());
 
         return new Response("Recipe was deleted", Response::HTTP_NO_CONTENT);
     }
@@ -150,6 +158,7 @@ class RecipeService
         // [SOSTENIBILIDAD] Invalidamos la caché al editar una receta
         // para que los datos cacheados no queden obsoletos.
         $cache->delete(self::CACHE_KEY);
+        $cache->delete('system_recipe_' . $recipe->getId());
 
         return new Response(
             Utils::serializeData($recipe, $this->getRecipeGroups(), $serializer),
@@ -178,5 +187,50 @@ class RecipeService
             $recipe->getRecipeIngredients()->add($recipeIngredient);
             $em->persist($recipeIngredient);
         }
+    }
+
+    public function getUserFavourites(Users $user, SerializerInterface $serializer): Response
+    {
+        return new Response(
+            Utils::serializeData($user->getRecipe(), $this->getRecipeGroups(), $serializer),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    public function addFavourite(Users $user, Recipes $recipe, SerializerInterface $serializer): Response
+    {
+        if ($this->recipeRepository->isFavourite($user, $recipe))
+            return new Response("Recipe already in favourites", Response::HTTP_CONFLICT);
+
+        $user->getRecipe()->add($recipe);
+
+        $em = $this->doctrine->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        return new Response(
+            Utils::serializeData(
+                $recipe,
+                $this->getRecipeGroups(),
+                $serializer
+            ),
+            Response::HTTP_CREATED,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    public function removeFavourite(Users $user, Recipes $recipe): Response
+    {
+        if (!$this->recipeRepository->isFavourite($user, $recipe))
+            return new Response("Recipe not in favourites", Response::HTTP_NOT_FOUND);
+
+        $user->getRecipe()->removeElement($recipe);
+
+        $em = $this->doctrine->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        return new Response("Recipe removed from favourites", Response::HTTP_NO_CONTENT);
     }
 }

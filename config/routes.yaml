@@ -41,3 +41,13 @@ search:
     path: /search
     controller: App\Controller\SearchController::search
     methods: [GET]
+
+user_favourites:
+    path: /users/{id}/favourites
+    controller: App\Controller\RecipesController::getUserFavourites
+    methods: [GET]
+
+user_favourite:
+    path: /users/{userId}/favourites/{recipeId}
+    controller: App\Controller\RecipesController::manageFavourite
+    methods: [POST, DELETE]
