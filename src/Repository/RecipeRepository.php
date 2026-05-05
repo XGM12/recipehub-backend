@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Recipes;
+use App\Entity\Users;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -28,6 +29,11 @@ class RecipeRepository extends ServiceEntityRepository
         return $this->findOneBy(['createdBy' => null, 'id' => $id]);
     }
 
+    public function findByUser(Users $user): array
+    {
+        return $this->findBy(['createdBy' => $user]);
+    }
+
     public function searchRecipes(string $name, array $categories = []): array
     {
         $qb = $this->createQueryBuilder('r')
@@ -40,5 +46,10 @@ class RecipeRepository extends ServiceEntityRepository
                 ->setParameter('categories', $categories);
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function isFavourite(Users $user, Recipes $recipe): bool
+    {
+        return $user->getRecipe()->contains($recipe);
     }
 }

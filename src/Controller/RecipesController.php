@@ -68,4 +68,36 @@ class RecipesController extends AbstractController
 
         return $this->recipeService->updateRecipe($request, $recipe, $serializer, $cache);
     }
+
+    public function getUserFavourites(Request $request, SerializerInterface $serializer): Response
+    {
+        Utils::checkRequestMethod($request, "GET");
+
+        $user = $this->userRepository->findByIdOrNull($request->get("id"));
+
+        if (!$user)
+            return new Response("User not found", Response::HTTP_NOT_FOUND);
+
+        return $this->recipeService->getUserFavourites($user, $serializer);
+    }
+
+    public function manageFavourite(Request $request, SerializerInterface $serializer): Response
+    {
+        Utils::checkRequestMethod($request, "POST", "DELETE");
+
+        $user = $this->userRepository->findByIdOrNull($request->get("userId"));
+
+        if (!$user)
+            return new Response("User not found", Response::HTTP_NOT_FOUND);
+
+        $recipe = $this->recipeRepository->findByIdOrNull($request->get("recipeId"));
+
+        if (!$recipe)
+            return new Response("Recipe not found", Response::HTTP_NOT_FOUND);
+
+        if ($request->getMethod() == "POST")
+            return $this->recipeService->addFavourite($user, $recipe, $serializer);
+
+        return $this->recipeService->removeFavourite($user, $recipe);
+    }
 }
