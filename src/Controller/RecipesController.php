@@ -33,10 +33,10 @@ class RecipesController extends AbstractController
         return $this->recipeService->getSystemRecipes($serializer, $cache);
     }
 
-    public function getSystemRecipe(Request $request, SerializerInterface $serializer): Response
+    public function getSystemRecipe(Request $request, SerializerInterface $serializer, CacheInterface $cache): Response
     {
         Utils::checkRequestMethod($request, "GET");
-        return $this->recipeService->getSystemRecipe($request->get('id'), $serializer);
+        return $this->recipeService->getSystemRecipe($request->get('id'), $serializer, $cache);
     }
 
     public function userRecipes(Request $request, SerializerInterface $serializer, CacheInterface $cache): Response
