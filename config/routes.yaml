@@ -56,3 +56,8 @@ community_recipes:
     path: /users/{id}/community
     controller: App\Controller\RecipesController::getCommunityRecipes
     methods: [GET]
+
+recipe:
+    path: /recipe/{id}
+    controller: App\Controller\RecipesController::getRecipe
+    methods: [GET]

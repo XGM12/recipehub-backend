@@ -249,4 +249,22 @@ class RecipeService
             ['Content-Type' => 'application/json']
         );
     }
+
+    public function getRecipe(string $id, SerializerInterface $serializer, CacheInterface $cache): Response
+    {
+        // [SOSTENIBILIDAD] Caché Redis por receta para evitar queries repetidas.
+        $recipe = $cache->get('recipe_' . $id, function (ItemInterface $item) use ($id) {
+            $item->expiresAfter(300);
+            return $this->recipeRepository->findByIdOrNull($id);
+        });
+
+        if (!$recipe)
+            return new Response("Recipe not found", Response::HTTP_NOT_FOUND);
+
+        return new Response(
+            Utils::serializeData($recipe, $this->getRecipeGroups(), $serializer),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
 }

@@ -112,4 +112,11 @@ class RecipesController extends AbstractController
 
         return $this->recipeService->getCommunityRecipes($user, $serializer, $cache);
     }
+
+    public function getRecipe(Request $request, SerializerInterface $serializer, CacheInterface $cache): Response
+    {
+        Utils::checkRequestMethod($request, "GET");
+
+        return $this->recipeService->getRecipe($request->get('id'), $serializer, $cache);
+    }
 }
