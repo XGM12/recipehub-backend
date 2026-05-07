@@ -109,9 +109,9 @@ class RecipeService
 
         $em->flush();
 
-        // [SOSTENIBILIDAD] Se invalida la caché al crear una receta nueva
-        // para garantizar consistencia de datos sin consultas innecesarias.
-        $cache->delete(self::CACHE_KEY);
+        // [SOSTENIBILIDAD] Se limpia toda la caché al crear una receta nueva para invalidar
+        // system_recipes y las cachés de comunidad de todos los usuarios.
+        $cache->clear();
 
         return new Response(
             Utils::serializeData($recipe, $this->getRecipeGroups(), $serializer),
