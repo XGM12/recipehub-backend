@@ -51,3 +51,8 @@ user_favourite:
     path: /users/{userId}/favourites/{recipeId}
     controller: App\Controller\RecipesController::manageFavourite
     methods: [POST, DELETE]
+
+community_recipes:
+    path: /users/{id}/community
+    controller: App\Controller\RecipesController::getCommunityRecipes
+    methods: [GET]

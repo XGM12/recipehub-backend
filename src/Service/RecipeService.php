@@ -233,4 +233,20 @@ class RecipeService
 
         return new Response("Recipe removed from favourites", Response::HTTP_NO_CONTENT);
     }
+
+    public function getCommunityRecipes(Users $user, SerializerInterface $serializer, CacheInterface $cache): Response
+    {
+        // [SOSTENIBILIDAD] Caché Redis de 5 minutos por usuario para evitar queries repetidas a MySQL.
+        // Reduce el procesamiento del servidor y el consumo energético asociado.
+        $recipes = $cache->get('community_recipes_' . $user->getId(), function (ItemInterface $item) use ($user) {
+            $item->expiresAfter(300);
+            return $this->recipeRepository->findByOtherUsers($user);
+        });
+
+        return new Response(
+            Utils::serializeData($recipes, $this->getRecipeGroups(), $serializer),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
 }

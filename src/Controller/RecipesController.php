@@ -100,4 +100,16 @@ class RecipesController extends AbstractController
 
         return $this->recipeService->removeFavourite($user, $recipe);
     }
+
+    public function getCommunityRecipes(Request $request, SerializerInterface $serializer, CacheInterface $cache): Response
+    {
+        Utils::checkRequestMethod($request, "GET");
+
+        $user = $this->userRepository->findByIdOrNull($request->get('id'));
+
+        if (!$user)
+            return new Response("User not found", Response::HTTP_NOT_FOUND);
+
+        return $this->recipeService->getCommunityRecipes($user, $serializer, $cache);
+    }
 }

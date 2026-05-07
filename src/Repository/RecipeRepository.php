@@ -52,4 +52,14 @@ class RecipeRepository extends ServiceEntityRepository
     {
         return $user->getRecipe()->contains($recipe);
     }
+
+    public function findByOtherUsers(Users $user): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.createdBy != :user')
+            ->andWhere('r.createdBy IS NOT NULL')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
 }
