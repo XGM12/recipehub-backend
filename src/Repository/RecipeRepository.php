@@ -24,11 +24,6 @@ class RecipeRepository extends ServiceEntityRepository
         return $this->findBy(['createdBy' => null]);
     }
 
-    public function findSystemRecipeById(string $id): ?Recipes
-    {
-        return $this->findOneBy(['createdBy' => null, 'id' => $id]);
-    }
-
     public function findByUser(Users $user): array
     {
         return $this->findBy(['createdBy' => $user]);
