@@ -127,10 +127,12 @@ class RecipeService
         ]);
 
         $this->clearSteps($recipe, $em);
+        $this->clearIngredients($recipe, $em);
+        $em->flush();
+
         if (isset($bodyDecoded['steps']))
             $this->persistSteps($bodyDecoded['steps'], $recipe, $em);
 
-        $this->clearIngredients($recipe, $em);
         if (isset($bodyDecoded['ingredients']))
             $this->persistIngredients($bodyDecoded['ingredients'], $recipe, $em);
 
